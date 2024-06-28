@@ -25,8 +25,8 @@ const updateWorldSettings = () => {
 
 updateWorldSettings();
 
-const boundary = new Boundary(new Vector(10, 10), new Vector(200, 50));
-const ray = new Ray(new Vector(40, 40), new Vector(40, -5));
+const wall = new Boundary(new Vector(200, 10), new Vector(200, 200));
+const ray = new Ray(new Vector(40, 40), new Vector(1, 0));
 
 
 const update = () => {
@@ -39,8 +39,15 @@ const update = () => {
   }
   ctx.clearRect(0, 0, worldWidth, worldHeight);
 
-  boundary.draw(ctx);
+  wall.draw(ctx);
   ray.draw(ctx);
+
+  let pt = ray.cast(wall)
+  if (pt) {
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   updateWorldSettings();
 
