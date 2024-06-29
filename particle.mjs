@@ -25,6 +25,7 @@ class Particle {
     for (const ray of this.rays) {
       let minPt = null;
       let minDist = Number.MAX_SAFE_INTEGER;
+      let minWall = null;
       for (const wall of walls) {
         const pt = ray.cast(wall);
         if (pt) {
@@ -32,6 +33,7 @@ class Particle {
           if (dist < minDist) {
             minPt = pt;
             minDist = dist;
+            minWall = wall;
           }
         }
       }
@@ -40,6 +42,8 @@ class Particle {
         ctx.moveTo(this.pos.x, this.pos.y);
         ctx.lineTo(minPt.x, minPt.y);
         ctx.stroke();
+
+        minWall.hitByRay();
       }
     }
   }

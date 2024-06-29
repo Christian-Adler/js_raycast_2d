@@ -58,7 +58,7 @@ walls.push(new Boundary(new Vector(0, 0), new Vector(worldWidth, 0)));
 walls.push(new Boundary(new Vector(worldWidth, 0), new Vector(worldWidth, worldHeight)));
 walls.push(new Boundary(new Vector(0, worldHeight), new Vector(worldWidth, worldHeight)));
 
-const particle = new Particle(new Vector(40, 40));
+const particle = new Particle(new Vector(worldWidth2, worldHeight2));
 
 
 const update = () => {
@@ -72,7 +72,7 @@ const update = () => {
   ctx.clearRect(0, 0, worldWidth, worldHeight);
 
   for (const wall of walls) {
-    // wall.draw(ctx);
+    wall.draw(ctx);
   }
   particle.draw(ctx);
 
