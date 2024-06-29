@@ -5,7 +5,7 @@ class Particle {
   constructor(pos) {
     this.pos = pos;
     this.rays = [];
-    for (let i = 0; i < 360; i += 10) {
+    for (let i = 0; i < 360; i += 0.2) {
       this.rays.push(new Ray(this.pos, deg2rad(i)));
     }
   }

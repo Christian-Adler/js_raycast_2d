@@ -29,6 +29,11 @@ const walls = [];
 for (let i = 0; i < 5; i++) {
   walls.push(new Boundary(new Vector(Math.random() * worldWidth, Math.random() * worldHeight), new Vector(Math.random() * worldWidth, Math.random() * worldHeight)))
 }
+walls.push(new Boundary(new Vector(0, 0), new Vector(0, worldHeight)))
+walls.push(new Boundary(new Vector(0, 0), new Vector(worldWidth, 0)))
+walls.push(new Boundary(new Vector(worldWidth, 0), new Vector(worldWidth, worldHeight)))
+walls.push(new Boundary(new Vector(0, worldHeight), new Vector(worldWidth, worldHeight)))
+
 const particle = new Particle(new Vector(40, 40));
 
 
@@ -43,9 +48,11 @@ const update = () => {
   ctx.clearRect(0, 0, worldWidth, worldHeight);
 
   for (const wall of walls) {
-    wall.draw(ctx);
+    // wall.draw(ctx);
   }
   particle.draw(ctx);
+
+  ctx.strokeStyle = "rgba(255,255,255,0.2)";
   particle.look(ctx, walls);
 
 
