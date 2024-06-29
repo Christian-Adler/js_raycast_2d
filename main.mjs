@@ -25,7 +25,10 @@ const updateWorldSettings = () => {
 
 updateWorldSettings();
 
-const wall = new Boundary(new Vector(200, 10), new Vector(200, 200));
+const walls = [];
+for (let i = 0; i < 5; i++) {
+  walls.push(new Boundary(new Vector(Math.random() * worldWidth, Math.random() * worldHeight), new Vector(Math.random() * worldWidth, Math.random() * worldHeight)))
+}
 const particle = new Particle(new Vector(40, 40));
 
 
@@ -39,9 +42,11 @@ const update = () => {
   }
   ctx.clearRect(0, 0, worldWidth, worldHeight);
 
-  wall.draw(ctx);
+  for (const wall of walls) {
+    wall.draw(ctx);
+  }
   particle.draw(ctx);
-  particle.look(ctx, wall);
+  particle.look(ctx, walls);
 
 
   updateWorldSettings();

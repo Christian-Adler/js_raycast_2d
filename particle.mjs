@@ -20,13 +20,24 @@ class Particle {
     }
   }
 
-  look(ctx, wall) {
+  look(ctx, walls) {
     for (const ray of this.rays) {
-      const pt = ray.cast(wall);
-      if (pt) {
+      let minPt = null;
+      let minDist = Number.MAX_SAFE_INTEGER;
+      for (const wall of walls) {
+        const pt = ray.cast(wall);
+        if (pt) {
+          const dist = this.pos.distance(pt);
+          if (dist < minDist) {
+            minPt = pt;
+            minDist = dist;
+          }
+        }
+      }
+      if (minPt) {
         ctx.beginPath();
         ctx.moveTo(this.pos.x, this.pos.y);
-        ctx.lineTo(pt.x, pt.y);
+        ctx.lineTo(minPt.x, minPt.y);
         ctx.stroke();
       }
     }
