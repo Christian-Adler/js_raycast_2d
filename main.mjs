@@ -1,6 +1,6 @@
 import {Vector} from "./vector.mjs";
 import {Boundary} from "./boundary.mjs";
-import {Ray} from "./ray.mjs";
+import {Particle} from "./particle.mjs";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
@@ -26,7 +26,7 @@ const updateWorldSettings = () => {
 updateWorldSettings();
 
 const wall = new Boundary(new Vector(200, 10), new Vector(200, 200));
-const ray = new Ray(new Vector(40, 40), new Vector(1, 0));
+const particle = new Particle(new Vector(40, 40));
 
 
 const update = () => {
@@ -40,14 +40,9 @@ const update = () => {
   ctx.clearRect(0, 0, worldWidth, worldHeight);
 
   wall.draw(ctx);
-  ray.draw(ctx);
+  particle.draw(ctx);
+  particle.look(ctx, wall);
 
-  let pt = ray.cast(wall)
-  if (pt) {
-    ctx.beginPath();
-    ctx.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
-    ctx.fill();
-  }
 
   updateWorldSettings();
 
@@ -55,3 +50,7 @@ const update = () => {
 }
 
 update();
+
+window.addEventListener("mousemove", (evt) => {
+  particle.update(evt.x, evt.y);
+})

@@ -14,6 +14,12 @@ class Vector {
     ctx.fill();
   }
 
+  set(x, y) {
+    this.x = x;
+    this.y = y;
+    return this;
+  }
+
   mult(val) {
     this.x *= val;
     this.y *= val;
@@ -38,6 +44,10 @@ class Vector {
 
   subVec(vec) {
     return this.sub(vec.x, vec.y);
+  }
+
+  setVec(vec) {
+    return this.set(vec.x, vec.y);
   }
 
   dotProduct(vec) {

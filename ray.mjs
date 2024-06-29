@@ -1,9 +1,9 @@
 import {Vector} from "./vector.mjs";
 
 class Ray {
-  constructor(pos, dir) {
+  constructor(pos, angle) {
     this.pos = pos;
-    this.dir = dir.normalize();
+    this.dir = Vector.fromAngle(angle);
   }
 
   setDir(dir) {
@@ -35,10 +35,10 @@ class Ray {
     const x2 = boundary.b.x;
     const y2 = boundary.b.y;
 
-    const y3 = this.pos.y;
     const x3 = this.pos.x;
-    const x4 = this.pos.y + this.dir.x;
-    const y4 = this.pos.x + this.dir.y;
+    const y3 = this.pos.y;
+    const x4 = this.pos.x + this.dir.x;
+    const y4 = this.pos.y + this.dir.y;
 
 
     const denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
