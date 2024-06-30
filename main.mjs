@@ -1,6 +1,7 @@
 import {Vector} from "./vector.mjs";
 import {Boundary} from "./boundary.mjs";
 import {Particle} from "./particle.mjs";
+import {lerpVec} from "./utils.mjs";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
@@ -58,8 +59,16 @@ walls.push(new Boundary(new Vector(0, 0), new Vector(worldWidth, 0)));
 walls.push(new Boundary(new Vector(worldWidth, 0), new Vector(worldWidth, worldHeight)));
 walls.push(new Boundary(new Vector(0, worldHeight), new Vector(worldWidth, worldHeight)));
 
+const svgLightPath = document.getElementById('lightPath');
+const svgLightPathLength = Math.floor(svgLightPath.getTotalLength());
+let svgLightPathPos = 0;
+
 const particle = new Particle(new Vector(worldWidth2, worldHeight2));
 
+let noMouseTimer = null;
+let noMouseStep = 0;
+let noMouseLastPos = null;
+let noMouseTargetPos = null;
 
 const update = () => {
 
@@ -74,6 +83,21 @@ const update = () => {
   for (const wall of walls) {
     wall.draw(ctx);
   }
+
+  if (!noMouseTimer && noMouseStep === 0) {
+    const pt = svgLightPath.getPointAtLength(svgLightPathPos * svgLightPathLength);
+    const vec = new Vector(pt.x * sizeFactor + worldWidth2, pt.y * sizeFactor + worldHeight2);
+    svgLightPathPos += 0.0002;
+    if (svgLightPathPos >= 1)
+      svgLightPathPos = 0;
+    particle.update(vec.x, vec.y);
+  } else if (!noMouseTimer && noMouseStep > 0) {
+    const moveToLightPathPos = lerpVec(noMouseTargetPos, noMouseLastPos, noMouseStep / 100);
+    particle.update(moveToLightPathPos.x, moveToLightPathPos.y);
+    noMouseStep--;
+  }
+
+  ctx.strokeStyle = "white";
   particle.draw(ctx);
 
   ctx.strokeStyle = "rgba(255,255,255,0.2)";
@@ -88,5 +112,25 @@ const update = () => {
 update();
 
 window.addEventListener("mousemove", (evt) => {
+  clearTimeout(noMouseTimer);
+  noMouseTimer = setTimeout(() => {
+    clearTimeout(noMouseTimer);
+    noMouseTimer = null;
+    noMouseLastPos = particle.pos.clone();
+    noMouseStep = 100;
+
+    // find nearest auto pas pos
+    let minDist = Number.MAX_SAFE_INTEGER;
+    for (let i = 0; i < 100; i++) {
+      const pt = svgLightPath.getPointAtLength(i / 100 * svgLightPathLength);
+      const vec = new Vector(pt.x * sizeFactor + worldWidth2, pt.y * sizeFactor + worldHeight2);
+      const dist = vec.distance(noMouseLastPos);
+      if (dist < minDist) {
+        minDist = dist;
+        noMouseTargetPos = vec;
+        svgLightPathPos = i / 100;
+      }
+    }
+  }, 3000);
   particle.update(evt.x, evt.y);
 })
