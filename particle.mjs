@@ -6,19 +6,19 @@ class Particle {
     this.pos = pos;
     this.rays = [];
     const rayDegStep = 0.2;
-    for (let i = 0; i < 360 - rayDegStep; i += rayDegStep) {
+    for (let i = 0; i <= 360 - rayDegStep; i += rayDegStep) {
       this.rays.push(new Ray(this.pos, deg2rad(i)));
     }
   }
 
   draw(ctx) {
-    ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, 5, 0, Math.PI * 2);
-    ctx.fill();
+    // ctx.beginPath();
+    // ctx.arc(this.pos.x, this.pos.y, 2, 0, Math.PI * 2);
+    // ctx.fill();
 
-    for (const ray of this.rays) {
-      ray.draw(ctx);
-    }
+    // for (const ray of this.rays) {
+    //   ray.draw(ctx);
+    // }
   }
 
   look(ctx, walls) {
