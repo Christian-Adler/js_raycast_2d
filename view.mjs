@@ -12,7 +12,7 @@ class View {
     ctx.clearRect(0, 0, 400, 400);
     ctx.fillStyle = "white";
     ctx.strokeStyle = "white";
-    const maxViewWidth = 200;
+    const maxViewWidth = 400;
     const sliceWidth = 400 / scene.length;
     for (let i = 0; i < scene.length; i++) {
       const distance = Math.min(scene[i], maxViewWidth);
@@ -20,7 +20,7 @@ class View {
       const h = scale(distance, 0, maxViewWidth, 400, 0);
       ctx.fillStyle = `rgb(${b}, ${b}, ${b})`;
       ctx.beginPath();
-      ctx.rect(i * sliceWidth, 200 - h / 2, sliceWidth, h);
+      ctx.rect(i * sliceWidth, 200 - h / 2, sliceWidth + 1, h);
       ctx.fill();
     }
 
