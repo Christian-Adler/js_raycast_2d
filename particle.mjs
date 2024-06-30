@@ -5,9 +5,12 @@ class Particle {
   constructor(pos) {
     this.pos = pos;
     this.rays = [];
+    this.fovDeg = 90;
+    // this.dir = Vector.fromAngle(0);
+    this.angleDeg = 0;
     const rayDegStep = 0.2;
-    for (let i = 0; i <= 360 - rayDegStep; i += rayDegStep) {
-      this.rays.push(new Ray(this.pos, deg2rad(i)));
+    for (let i = -this.fovDeg / 2; i <= this.fovDeg / 2; i += rayDegStep) {
+      this.rays.push(new Ray(this.pos, deg2rad(i + this.angleDeg)));
     }
   }
 
@@ -22,7 +25,10 @@ class Particle {
   }
 
   look(ctx, walls) {
-    for (const ray of this.rays) {
+    const scene = new Array(this.rays.length);
+
+    for (let i = 0; i < this.rays.length; i++) {
+      const ray = this.rays[i];
       let minPt = null;
       let minDist = Number.MAX_SAFE_INTEGER;
       let minWall = null;
@@ -45,7 +51,9 @@ class Particle {
 
         minWall.hitByRay();
       }
+      scene[i] = minDist;
     }
+    return scene;
   }
 
   update(x, y) {

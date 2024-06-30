@@ -11,6 +11,12 @@
             font-family: Arial, serif;
         }
 
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
         body {
             background: rgb(2, 0, 36);
             cursor: none;
@@ -24,6 +30,18 @@
             transform: translate(-50%, 0);
             color: #434343;
             text-shadow: black 1px 1px 3px;
+        }
+
+        #view {
+            z-index: 1;
+            display: block;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 400px;
+            width: 400px;
+            background: rgb(2, 0, 36);
+            border: 1px solid rgb(2, 0, 117);
         }
     </style>
 </head>
@@ -52,12 +70,14 @@
 </div>
 
 <canvas id="canvas" height="500" width="500"></canvas>
+<canvas id="view" height="400" width="400"></canvas>
 
 <script src="utils.mjs" type="module"></script>
 <script src="vector.mjs" type="module"></script>
 <script src="ray.mjs" type="module"></script>
 <script src="boundary.mjs" type="module"></script>
 <script src="particle.mjs" type="module"></script>
+<script src="view.mjs" type="module"></script>
 <script src="main.mjs" type="module"></script>
 </body>
 </html>

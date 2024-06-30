@@ -2,6 +2,7 @@ import {Vector} from "./vector.mjs";
 import {Boundary} from "./boundary.mjs";
 import {Particle} from "./particle.mjs";
 import {lerpVec} from "./utils.mjs";
+import {View} from "./view.mjs";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
@@ -70,6 +71,8 @@ let noMouseStep = 0;
 let noMouseLastPos = null;
 let noMouseTargetPos = null;
 
+const view = new View();
+
 const update = () => {
 
   ctx.fillStyle = "white";
@@ -101,8 +104,9 @@ const update = () => {
   particle.draw(ctx);
 
   ctx.strokeStyle = "rgba(255,255,255,0.2)";
-  particle.look(ctx, walls);
+  const scene = particle.look(ctx, walls);
 
+  view.draw(scene);
 
   updateWorldSettings();
 
