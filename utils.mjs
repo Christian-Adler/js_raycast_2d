@@ -22,4 +22,8 @@ const deg2rad = (deg) => {
   return deg / 360 * (Math.PI * 2);
 }
 
-export {lerp, lerpVec, getRandomIntInclusive, rad2deg, deg2rad}
+const scale = (number, inMin, inMax, outMin, outMax) => {
+  return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
+
+export {lerp, lerpVec, getRandomIntInclusive, rad2deg, deg2rad, scale}
