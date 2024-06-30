@@ -1,35 +1,42 @@
 import {Vector} from "./vector.mjs";
+import {deg2rad} from "./utils.mjs";
 
 class Ray {
-  constructor(pos, angle) {
+  constructor(pos, angleDeg) {
     this.pos = pos;
-    this.dir = Vector.fromAngle(angle);
+    this.angleDeg = angleDeg;
   }
 
-  setDir(dir) {
-    this.dir = dir.normalize();
+  rotate(deltaAngleDeg) {
+    this.angleDeg += deltaAngleDeg;
   }
 
-  lookAt(vec) {
-    this.dir.x = vec.x - this.pos.x;
-    this.dir.y = vec.y - this.pos.y;
-    this.dir = this.dir.normalize();
-  }
+  // setDir(dir) {
+  //   this.dir = dir.normalize();
+  // }
+  //
+  // lookAt(vec) {
+  //   this.dir.x = vec.x - this.pos.x;
+  //   this.dir.y = vec.y - this.pos.y;
+  //   this.dir = this.dir.normalize();
+  // }
 
-  draw(ctx) {
-    ctx.save();
-
-    ctx.translate(this.pos.x, this.pos.y);
-
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(this.dir.x * 10, this.dir.y * 10);
-    ctx.stroke();
-
-    ctx.restore();
-  }
+  // draw(ctx) {
+  //   ctx.save();
+  //
+  //   ctx.translate(this.pos.x, this.pos.y);
+  //
+  //   ctx.beginPath();
+  //   ctx.moveTo(0, 0);
+  //   ctx.lineTo(this.dir.x * 10, this.dir.y * 10);
+  //   ctx.stroke();
+  //
+  //   ctx.restore();
+  // }
 
   cast(boundary) {
+    const dirVec = Vector.fromAngle(deg2rad(this.angleDeg));
+
     const x1 = boundary.a.x;
     const y1 = boundary.a.y;
     const x2 = boundary.b.x;
@@ -37,8 +44,8 @@ class Ray {
 
     const x3 = this.pos.x;
     const y3 = this.pos.y;
-    const x4 = this.pos.x + this.dir.x;
-    const y4 = this.pos.y + this.dir.y;
+    const x4 = this.pos.x + dirVec.x;
+    const y4 = this.pos.y + dirVec.y;
 
 
     const denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);

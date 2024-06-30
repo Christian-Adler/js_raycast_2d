@@ -1,5 +1,5 @@
 import {Ray} from "./ray.mjs";
-import {deg2rad} from "./utils.mjs";
+import {deg2rad, rad2deg} from "./utils.mjs";
 
 class Particle {
   constructor(pos) {
@@ -8,11 +8,37 @@ class Particle {
     this.fovDeg = 90;
     // this.dir = Vector.fromAngle(0);
     this.angleDeg = 0;
-    const rayDegStep = 0.2;
-    for (let i = -this.fovDeg / 2; i <= this.fovDeg / 2; i += rayDegStep) {
-      this.rays.push(new Ray(this.pos, deg2rad(i + this.angleDeg)));
+    this.rayDegStep = 0.2;
+    for (let i = -this.fovDeg / 2; i <= this.fovDeg / 2; i += this.rayDegStep) {
+      this.rays.push(new Ray(this.pos, i + this.angleDeg));
     }
   }
+
+  lookAt(vec) {
+    const prevAngleDeg = this.angleDeg;
+    this.angleDeg = rad2deg(vec.clone().subVec(this.pos).toRadians());
+    const deltaAngleDeg = this.angleDeg - prevAngleDeg;
+    for (const ray of this.rays) {
+      ray.rotate(deltaAngleDeg);
+    }
+  }
+
+  updateFOV(deltaAngleDeg) {
+    this.rays = [];
+    this.fovDeg += deltaAngleDeg;
+    this.fovDeg = Math.max(20, Math.min(180, this.fovDeg));
+    for (let i = -this.fovDeg / 2; i <= this.fovDeg / 2; i += this.rayDegStep) {
+      this.rays.push(new Ray(this.pos, i + this.angleDeg));
+    }
+  }
+
+  rotate(deltaAngleDeg) {
+    this.angleDeg += deltaAngleDeg;
+    for (const ray of this.rays) {
+      ray.rotate(deltaAngleDeg);
+    }
+  }
+
 
   draw(ctx) {
     // ctx.beginPath();
@@ -35,7 +61,8 @@ class Particle {
       for (const wall of walls) {
         const pt = ray.cast(wall);
         if (pt) {
-          const dist = this.pos.distance(pt);
+          let dist = this.pos.distance(pt);
+          dist *= Math.cos(deg2rad(ray.angleDeg - this.angleDeg)); // remove fisheye - use distance parallel to view angle
           if (dist < minDist) {
             minPt = pt;
             minDist = dist;
