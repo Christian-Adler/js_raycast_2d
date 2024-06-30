@@ -1,5 +1,6 @@
 import {Ray} from "./ray.mjs";
 import {deg2rad, rad2deg} from "./utils.mjs";
+import {Vector} from "./vector.mjs";
 
 class Particle {
   constructor(pos) {
@@ -39,6 +40,9 @@ class Particle {
     }
   }
 
+  step(deltaStep) {
+    this.pos.addVec(Vector.fromAngle(deg2rad(this.angleDeg)).mult(deltaStep));
+  }
 
   draw(ctx) {
     // ctx.beginPath();
@@ -58,6 +62,7 @@ class Particle {
       let minPt = null;
       let minDist = Number.MAX_SAFE_INTEGER;
       let minWall = null;
+      let minWallColor = null;
       for (const wall of walls) {
         const pt = ray.cast(wall);
         if (pt) {
@@ -67,6 +72,7 @@ class Particle {
             minPt = pt;
             minDist = dist;
             minWall = wall;
+            minWallColor = wall.hslColorValRad;
           }
         }
       }
@@ -78,7 +84,7 @@ class Particle {
 
         minWall.hitByRay();
       }
-      scene[i] = minDist;
+      scene[i] = {minDist, minWallColor};
     }
     return scene;
   }

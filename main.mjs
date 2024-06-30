@@ -55,7 +55,8 @@ for (const svgPath of svgPaths) {
   }
 }
 
-if (true) {
+// if (false)
+{
   walls.push(new Boundary(new Vector(0, 0), new Vector(0, worldHeight)));
   walls.push(new Boundary(new Vector(0, 0), new Vector(worldWidth, 0)));
   walls.push(new Boundary(new Vector(worldWidth, 0), new Vector(worldWidth, worldHeight)));
@@ -76,8 +77,11 @@ let noMouseAngleStep = 0;
 
 const view = new View();
 
+let multInput = false;
 let rotateLeft = false;
 let rotateRight = false;
+let walk = false;
+let walkBack = false;
 
 const update = () => {
 
@@ -122,8 +126,12 @@ const update = () => {
 
   view.draw(scene);
 
-  if (rotateLeft) particle.rotate(-0.9);
-  else if (rotateRight) particle.rotate(0.9);
+  const moveFactor = multInput ? 5 : 1;
+  if (rotateLeft) particle.rotate(-0.9 * moveFactor);
+  else if (rotateRight) particle.rotate(0.9 * moveFactor);
+
+  if (walk) particle.step(1 * moveFactor);
+  else if (walkBack) particle.step(-1 * moveFactor);
 
   updateWorldSettings();
 
@@ -132,7 +140,7 @@ const update = () => {
 
 update();
 
-window.addEventListener("mousemove", (evt) => {
+function clearAutoAnimation() {
   clearTimeout(noMouseTimer);
   noMouseTimer = setTimeout(() => {
     clearTimeout(noMouseTimer);
@@ -157,6 +165,10 @@ window.addEventListener("mousemove", (evt) => {
       }
     }
   }, 3000);
+}
+
+window.addEventListener("mousemove", (evt) => {
+  clearAutoAnimation();
   particle.update(evt.x, evt.y);
 });
 
@@ -167,24 +179,40 @@ window.addEventListener("wheel", event => {
 }, {passive: false});
 
 const keyDownCallbacks = {
-  "ArrowLeft": () => {
+  "Shift": () => {
+    multInput = true;
+  }, "ArrowLeft": () => {
+    clearAutoAnimation();
     rotateLeft = true;
   },
   "ArrowRight": () => {
+    clearAutoAnimation();
     rotateRight = true;
   },
-  "ArrowUp": undefined,
-  "ArrowDown": undefined,
+  "ArrowUp": () => {
+    clearAutoAnimation();
+    walk = true;
+  },
+  "ArrowDown": () => {
+    clearAutoAnimation();
+    walkBack = true;
+  },
 };
 const keyUpCallbacks = {
-  "ArrowLeft": () => {
+  "Shift": () => {
+    multInput = false;
+  }, "ArrowLeft": () => {
     rotateLeft = false;
   },
   "ArrowRight": () => {
     rotateRight = false;
   },
-  "ArrowUp": undefined,
-  "ArrowDown": undefined,
+  "ArrowUp": () => {
+    walk = false;
+  },
+  "ArrowDown": () => {
+    walkBack = false;
+  },
 };
 
 window.addEventListener("keydown", (event) => {

@@ -20,8 +20,8 @@ class Boundary {
     if (this.age <= 0) return;
     this.age -= 0.001;
 
-    // ctx.strokeStyle = 'hsl(' + this.hslColorValRad + ', 100%, 50%, ' + (this.age) + ')';
-    ctx.strokeStyle = "rgba(255,255,255," + this.age + ")";
+    ctx.strokeStyle = 'hsl(' + this.hslColorValRad + ', 100%, 50%, ' + (this.age) + ')';
+    // ctx.strokeStyle = "rgba(255,255,255," + this.age + ")";
     // ctx.lineWidth = this.age * 3;
     ctx.beginPath();
     ctx.moveTo(this.a.x, this.a.y);
